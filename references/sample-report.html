@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Influence Hub — Project Report 2025</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter','Helvetica Neue',Arial,sans-serif;background:#e0e0e0;display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;}
+  
+  @page {
+    size: A4;
+    margin: 0; /* Strips default browser print margins */
+  }
+
+  @media print {
+    body {
+      display: block; 
+      background: white;
+      padding: 0;
+      margin: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    
+    .page {
+      box-shadow: none !important;
+      width: 210mm;
+      height: 296mm; 
+      margin: 0;
+      page-break-after: always;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      overflow: hidden !important; 
+    }
+
+    /* Keep flex layouts from breaking */
+    .data-body-row, .cover-footer, .hbar-row {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+    }
+  }
+
+  .page {
+    width: 210mm;         /* Strict A4 physical width */
+    height: 297mm;        /* Strict A4 physical height */
+    position: relative;
+    background: white;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    overflow: hidden;     /* Ensures oversized content doesn't stretch the page */
+    page-break-after: always;
+    break-after: page;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* FOOTER */
+  .page-footer{display:flex;align-items:center;justify-content:space-between;padding:0 64px 40px;margin-top:auto;}
+  .page-footer.dark{padding:0 64px 40px;}
+  .pg-box{width:28px;height:28px;border:1.5px solid black;display:flex;align-items:center;justify-content:center;font-size:12px;font-variant-numeric:tabular-nums;}
+  .pg-box.white-box{border-color:white;color:white;}
+  .footer-title{font-size:12px;color:#555;letter-spacing:0.02em;}
+  .footer-title.white-text{color:rgba(255,255,255,0.6);}
+
+  /* =================== COVER =================== */
+  .page.cover{background:#3D3DF5;padding:64px 64px 56px;justify-content:space-between;}
+  .cover-eyebrow{font-size:14px;color:rgba(255,255,255,0.7);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px;}
+  .cover-title{font-size:62px;font-weight:700;color:white;line-height:1.08;max-width:82%;}
+  .cover-subtitle{font-size:18px;color:rgba(255,255,255,0.75);margin-top:20px;line-height:1.5;max-width:70%;}
+  .cover-footer{display:flex;justify-content:space-between;align-items:flex-end;}
+  .cover-meta{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.7;}
+  .cover-year{font-size:22px;color:white;font-weight:400;}
+
+  /* =================== TOC =================== */
+  .page.toc{background:#111111;padding:56px 64px 48px;}
+  .toc-header{font-size:14px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:40px;}
+  .toc-entry{display:flex;align-items:flex-start;gap:32px;padding:28px 0;border-top:1px solid rgba(255,255,255,0.12);}
+  .toc-entry:last-child{border-bottom:1px solid rgba(255,255,255,0.12);}
+  .toc-page-num{font-size:13px;color:rgba(255,255,255,0.45);min-width:28px;padding-top:10px;font-variant-numeric:tabular-nums;}
+  .toc-title{font-size:42px;font-weight:400;color:white;line-height:1.1;}
+  .toc-sub{font-size:14px;color:rgba(255,255,255,0.5);margin-top:6px;}
+
+  /* =================== INTRO / DARK =================== */
+  .page.intro{background:#111111;padding:72px 80px 56px;justify-content:space-between;}
+  .intro-body{font-size:23px;font-weight:400;color:white;line-height:1.65;flex:1;}
+  .intro-body p+p{margin-top:28px;}
+  .intro-label{font-weight:700;font-size:13px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:28px;}
+
+  /* =================== DIVIDER =================== */
+  .page.divider{padding:64px;justify-content:space-between;}
+  .page.divider.green{background:#1DC55E;}
+  .page.divider.blue{background:#3D3DF5;}
+  .divider-num{font-size:13px;color:rgba(0,0,0,0.5);margin-bottom:16px;}
+  .divider-num.white-text{color:rgba(255,255,255,0.6);}
+  .divider-title{font-size:70px;font-weight:400;color:black;line-height:1.05;max-width:78%;}
+  .divider-title.white-text{color:white;}
+
+  /* =================== DATA PAGES =================== */
+  .page.data{padding:56px 64px 0;}
+  .data-headline{font-size:42px;font-weight:400;color:black;line-height:1.1;margin-bottom:36px;}
+  .data-body-row{display:flex;gap:48px;flex:1;}
+  .data-body-left{flex:1.1;font-size:16px;line-height:1.7;color:black;}
+  .data-body-left p+p{margin-top:18px;}
+  .data-stats-right{flex:0.85;display:flex;flex-direction:column;}
+  .stat-block{padding:20px 0;border-top:1px solid #ddd;}
+  .stat-block:first-child{border-top:none;}
+  .stat-number{font-size:86px;font-weight:700;color:black;line-height:1;margin-bottom:6px;}
+  .stat-label{font-size:13px;color:#333;line-height:1.5;max-width:180px;}
+  .data-footnotes{font-size:12px;color:#666;margin-top:20px;border-top:1px solid #eee;padding:12px 0;}
+  .illus-block{height:180px;margin-top:auto;display:flex;}
+
+  /* =================== OPPORTUNITY =================== */
+  .page.opportunity{padding:56px 64px 0;}
+  .opp-pill{display:inline-block;background:#D6F25A;color:black;font-size:13px;font-weight:700;padding:6px 16px;border-radius:100px;margin-bottom:28px;}
+  .opp-headline{font-size:40px;font-weight:400;color:black;line-height:1.15;margin-bottom:24px;max-width:90%;}
+  .opp-body{font-size:16px;line-height:1.7;color:black;}
+  .opp-body p+p{margin-top:16px;}
+  .in-practice-box{background:#E8F7A0;padding:24px 28px;border-radius:8px;margin-top:32px;font-size:15px;line-height:1.65;color:black;}
+  .in-practice-box strong{display:block;margin-bottom:8px;}
+
+  /* =================== QUOTES =================== */
+  .page.quotes{background:#F9DDD5;padding:56px 64px 0;}
+  .quotes-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:8px;flex:1;}
+  .quote-block{padding:0;}
+  .quote-mark{font-size:48px;font-weight:700;color:black;line-height:1;margin-bottom:12px;}
+  .quote-text{font-size:18px;line-height:1.6;color:black;font-weight:400;}
+  .quote-attr{margin-top:20px;}
+  .quote-name{font-size:14px;font-weight:700;color:black;text-decoration:underline;display:block;}
+  .quote-role{font-size:13px;color:#333;text-decoration:underline;}
+  .in-practice-box.salmon{background:#F5C9BB;}
+
+  /* =================== TAKEAWAYS =================== */
+  .page.takeaways{padding:56px 64px 0;}
+  .tk-headline{font-size:46px;font-weight:400;color:black;line-height:1.1;margin-bottom:20px;}
+  .tk-body{font-size:16px;line-height:1.65;color:#333;max-width:78%;margin-bottom:40px;}
+  .tk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;}
+  .tk-card{background:#C4C0F0;padding:28px 28px 32px;border-radius:8px;}
+  .tk-card-title{font-size:28px;font-weight:400;color:black;line-height:1.15;margin-bottom:12px;}
+  .tk-card-body{font-size:15px;color:black;line-height:1.6;}
+
+  /* =================== DARK CTA =================== */
+  .page.cta-dark{background:#111111;padding:72px 80px 56px;justify-content:space-between;}
+  .cta-headline{font-size:54px;font-weight:700;color:white;line-height:1.08;margin-bottom:36px;}
+  .cta-body{font-size:22px;color:white;line-height:1.65;}
+  .cta-body p+p{margin-top:24px;}
+  .cta-link{font-size:20px;color:white;text-decoration:underline;display:inline-block;margin-top:28px;}
+  .cta-footnote{font-size:13px;color:rgba(255,255,255,0.4);margin-top:auto;padding-top:32px;}
+
+  /* INLINE STAT GRID */
+  .inline-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:28px 0;}
+  .isg-cell{border-top:1px solid #ccc;padding:16px 0 24px;}
+  .isg-num{font-size:44px;font-weight:400;color:black;line-height:1;margin-bottom:8px;}
+  .isg-label{font-size:13px;color:#333;}
+
+  /* H-BAR CHARTS (RESTORED TO HIGH QUALITY) */
+  .hbar-chart{margin:24px 0;}
+  .hbar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;height:52px;background:#F0F0F0;}
+  .hbar-fill{display:flex;align-items:center;padding-left:16px;font-size:16px;font-weight:700;color:white;height:100%;}
+  .hbar-fill.green{background:#1DC55E;color:black;}
+  .hbar-fill.blue{background:#00BFFF;}
+  .hbar-label{flex:1;font-size:13px;color:#333;padding:0 12px;}
+
+  /* TECH TAG */
+  .tech-tag{display:inline-block;background:#F0F0F0;border:1px solid #ddd;font-size:13px;padding:4px 12px;border-radius:4px;margin:3px;}
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <div>
+    <div class="cover-eyebrow">Capstone Project Report · 2025</div>
+    <div class="cover-title">Influence Hub</div>
+    <div class="cover-subtitle">A full-stack platform connecting local businesses with social media influencers for transparent, structured marketing collaborations.</div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-meta">
+      Sharan Shivannanavar<br>
+      Reg: U02BF23S0094<br>
+      JSS SMI of UG &amp; PG Studies, Dharwad — 580004<br>
+      Department of Computer Science · BCA Final Year
+    </div>
+    <div style="text-align:right;">
+      <div class="cover-year">2025</div>
+      <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top:8px;">
+        <line x1="6" y1="7" x2="28" y2="7" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+        <line x1="26" y1="8" x2="11" y2="32" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page toc">
+  <div class="toc-header">Contents</div>
+  <div class="toc-entry">
+    <div class="toc-page-num">03</div>
+    <div><div class="toc-title">Project Overview</div><div class="toc-sub">Problem statement, goals &amp; scope</div></div>
+  </div>
+  <div class="toc-entry">
+    <div class="toc-page-num">05</div>
+    <div><div class="toc-title">Architecture &amp; Tech Stack</div><div class="toc-sub">System design, modules &amp; technology choices</div></div>
+  </div>
+  <div class="toc-entry">
+    <div class="toc-page-num">08</div>
+    <div><div class="toc-title">Core Features</div><div class="toc-sub">Authentication, collaboration lifecycle, payments &amp; automation</div></div>
+  </div>
+  <div class="toc-entry">
+    <div class="toc-page-num">11</div>
+    <div><div class="toc-title">Challenges &amp; Solutions</div><div class="toc-sub">Technical decisions, limitations &amp; workarounds</div></div>
+  </div>
+  <div class="toc-entry">
+    <div class="toc-page-num">13</div>
+    <div><div class="toc-title">Key Takeaways &amp; Future Scope</div><div class="toc-sub">Learnings, limitations &amp; roadmap</div></div>
+  </div>
+  <div class="page-footer dark" style="padding-top:32px;">
+    <div class="pg-box white-box">2</div>
+    <div class="footer-title white-text">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page intro">
+  <div>
+    <div class="intro-label">Introduction</div>
+    <div class="intro-body">
+      <p>Influencer marketing is no longer a luxury reserved for large corporations. Local cafés, boutique clothing stores, fitness studios, and small service businesses now compete for attention in the same digital spaces — yet they have no structured, affordable channel to connect with the content creators who can amplify their voice.</p>
+      <p>Influence Hub was built to close that gap. It is a full-stack web application where local businesses can discover influencers, propose collaborations with defined deliverables and budgets, and complete the entire engagement — from escrow payment to content delivery — without leaving the platform.</p>
+      <p>This report documents the design decisions, technical architecture, feature set, and the engineering journey behind the platform, built solo as a final-year BCA capstone project.</p>
+    </div>
+  </div>
+  <div class="page-footer dark">
+    <div class="pg-box white-box">3</div>
+    <div class="footer-title white-text">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page divider green">
+  <div>
+    <div class="divider-num">01</div>
+    <div class="divider-title">Project Overview</div>
+  </div>
+  <div class="page-footer" style="padding:0 0 0;">
+    <div class="pg-box" style="border-color:black;color:black;">4</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page data">
+  <div class="data-headline">Built for a market that exists but lacks the right tools</div>
+  <div class="data-body-row">
+    <div class="data-body-left">
+      <p>Small and medium businesses struggle to find influencers they can trust, negotiate with, and pay safely. Meanwhile, micro-influencers with loyal local audiences have no centralised platform to find brand deals, track deliverables, or receive payments securely.</p>
+      <p>Influence Hub solves both sides of this problem with a dual-role platform. A <strong>Business</strong> account can search for influencers, view public profiles, send collaboration requests with a budget and campaign brief, and hold payment in simulated escrow until deliverables are accepted.</p>
+      <p>An <strong>Influencer</strong> account can build a portfolio, set niche and city, receive and accept collaboration offers, submit content for review, and track payments — all within the platform.</p>
+      <p>An <strong>Admin</strong> account monitors platform health, manages disputes, and resolves contested collaborations with access to full messaging history.</p>
+    </div>
+    <div class="data-stats-right">
+      <div class="stat-block">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Distinct user roles: Business, Influencer, Admin</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">9</div>
+        <div class="stat-label">Core backend controllers handling all business logic</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">17</div>
+        <div class="stat-label">Frontend pages covering every user flow end-to-end</div>
+      </div>
+    </div>
+  </div>
+  <div class="illus-block">
+    <div style="flex:1;background:#1DC55E;display:flex;align-items:center;justify-content:center;">
+      <span style="font-size:48px;font-weight:700;color:black;opacity:0.2;">BUSINESS</span>
+    </div>
+    <div style="flex:1;background:#3D3DF5;display:flex;align-items:center;justify-content:center;">
+      <span style="font-size:48px;font-weight:700;color:white;opacity:0.25;">INFLUENCER</span>
+    </div>
+    <div style="flex:0.5;background:#111111;display:flex;align-items:center;justify-content:center;">
+      <span style="font-size:32px;font-weight:700;color:white;opacity:0.2;">ADMIN</span>
+    </div>
+  </div>
+  <div class="page-footer" style="padding-top:12px;">
+    <div class="pg-box">5</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page divider blue">
+  <div>
+    <div class="divider-num white-text">02</div>
+    <div class="divider-title white-text">Architecture &amp; Tech Stack</div>
+  </div>
+  <div class="page-footer" style="padding:0;">
+    <div class="pg-box white-box">6</div>
+    <div class="footer-title white-text">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page data">
+  <div class="data-headline">A modern, industry-standard MERN stack with automation layer</div>
+  <div class="data-body-row">
+    <div class="data-body-left">
+      <p>The technology choices were guided by real-world industry adoption, free-tier availability for student deployment, and fit-for-purpose design — not fashionable trends.</p>
+      <p><strong>Frontend:</strong> React.js with Vite for fast HMR and build performance. Tailwind CSS for utility-first styling with a purple/lavender design system. Component pages cover every flow from onboarding to admin dispute resolution.</p>
+      <p><strong>Backend:</strong> Node.js + Express.js REST API with JWT authentication, Helmet security headers, and express-rate-limit to prevent abuse. Multer handles file ingestion before Cloudinary upload.</p>
+      <p><strong>Database:</strong> MongoDB with Mongoose ODM. Collections cover Users, BusinessProfiles, InfluencerProfiles, Collaborations, Messages, and Notifications — all with relational references.</p>
+      <p><strong>Automation:</strong> n8n self-hosted workflow engine handles time-triggered events like auto-releasing escrow payments when a business approval deadline passes.</p>
+      <div class="data-footnotes">All services run locally in development. MongoDB Atlas used for cloud deployment.</div>
+    </div>
+    <div class="data-stats-right">
+      <div class="stat-block">
+        <div style="margin-bottom:12px;font-size:14px;font-weight:700;color:#333;">Technology Layers</div>
+        <div style="margin-bottom:8px;"><span class="tech-tag">React.js (Vite)</span><span class="tech-tag">Tailwind CSS</span></div>
+        <div style="margin-bottom:8px;"><span class="tech-tag">Node.js</span><span class="tech-tag">Express.js</span></div>
+        <div style="margin-bottom:8px;"><span class="tech-tag">MongoDB</span><span class="tech-tag">Mongoose</span></div>
+        <div style="margin-bottom:8px;"><span class="tech-tag">JWT Auth</span><span class="tech-tag">Nodemailer</span></div>
+        <div style="margin-bottom:8px;"><span class="tech-tag">Cloudinary</span><span class="tech-tag">Multer</span></div>
+        <div style="margin-bottom:8px;"><span class="tech-tag">n8n</span><span class="tech-tag">Razorpay (test)</span></div>
+        <div><span class="tech-tag">Helmet</span><span class="tech-tag">Rate Limiting</span></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Mongoose models forming the data layer</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">9</div>
+        <div class="stat-label">REST route modules covering every domain</div>
+      </div>
+    </div>
+  </div>
+  <div class="illus-block" style="height:120px;">
+    <div style="flex:1;background:#D6F25A;"></div>
+    <div style="flex:2;background:#3D3DF5;"></div>
+    <div style="flex:1;background:#1DC55E;"></div>
+    <div style="flex:1;background:#111111;"></div>
+    <div style="flex:1;background:#C4C0F0;"></div>
+  </div>
+  <div class="page-footer" style="padding-top:12px;">
+    <div class="pg-box">7</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page divider green">
+  <div>
+    <div class="divider-num">03</div>
+    <div class="divider-title">Core Features</div>
+  </div>
+  <div class="page-footer" style="padding:0;">
+    <div class="pg-box" style="border-color:black;color:black;">8</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page data">
+  <div class="data-headline">Authentication, discovery, and full collaboration lifecycle</div>
+  <div class="data-body-row">
+    <div class="data-body-left">
+      <p><strong>Email Authentication:</strong> Full JWT-based auth with Nodemailer-powered email verification. Users must verify their email before accessing the platform. Password reset via tokenised email link. Bcrypt password hashing throughout.</p>
+      <p><strong>Profile Onboarding:</strong> Businesses fill in industry type, city, and upload photos. Influencers set niche, city, follower count, and build a portfolio with Cloudinary-hosted media — all handled via Multer + Cloudinary pipeline.</p>
+      <p><strong>Collaboration Lifecycle:</strong> The platform tracks five states — Pending → Active → Delivered → Completed / Disputed. Businesses send requests with budget and brief. Influencers accept or decline. Delivery triggers business review. The admin resolves disputes with full context.</p>
+      <p><strong>Simulated Escrow:</strong> Payment is held in a MongoDB-tracked escrow field at request time. It is released to the influencer on approval, refunded on rejection, or auto-released by n8n after a deadline. No real money moves — this mirrors real escrow logic with test-mode Razorpay integration.</p>
+    </div>
+    <div class="data-stats-right">
+      <div class="stat-block">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Collaboration states: Pending, Active, Delivered, Completed, Disputed</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Notifications triggered for every state transition automatically</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Active collaboration per business-influencer pair at a time</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer" style="padding-top:16px;">
+    <div class="pg-box">9</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page data">
+  <div class="data-headline">Platform Feature Coverage</div>
+  
+  <div class="hbar-chart" style="margin-top: 48px;">
+    <div class="hbar-row"><div class="hbar-fill green" style="width:95%;">Auth &amp; Security</div></div>
+    <div class="hbar-row"><div class="hbar-fill green" style="width:90%;">Collaboration Management</div></div>
+    <div class="hbar-row"><div class="hbar-fill green" style="width:88%;">File Uploads &amp; Profiles</div></div>
+    <div class="hbar-row"><div class="hbar-fill green" style="width:80%;">Notifications &amp; Messaging</div></div>
+    <div class="hbar-row"><div class="hbar-fill green" style="width:70%;">Admin Dashboard</div></div>
+    <div class="hbar-row"><div class="hbar-fill green" style="width:60%;">n8n Automation</div></div>
+  </div>
+
+  <div class="page-footer" style="padding-top:16px;">
+    <div class="pg-box">10</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page opportunity">
+  <div class="opp-pill">The opportunity</div>
+  <div class="opp-headline">Automation with n8n removes human bottlenecks from the collaboration timeline</div>
+  <div class="opp-body">
+    <p>One of the most friction-heavy moments in a collaboration is the approval deadline. If a business fails to respond after a delivered submission, the influencer is stuck. Influence Hub solves this with a self-hosted n8n automation workflow.</p>
+    <p>When a collaboration is delivered, a scheduled n8n workflow checks for overdue approvals every hour. If the business approval window has passed, n8n hits a webhook endpoint that automatically releases the escrowed payment to the influencer — without any human intervention.</p>
+    <p>A second n8n workflow verifies Instagram post submission by checking the provided URL for reachability — a practical workaround to Instagram Graph API access restrictions that typically require app review approval.</p>
+  </div>
+  <div class="in-practice-box">
+    <strong>In practice:</strong>
+    The n8n webhook endpoints are protected by a shared secret in the environment. When triggered, they update the Collaboration document state to "completed" and fire a notification to both parties — making the entire resolution cycle transparent and auditable without manual admin action.
+  </div>
+  <div class="illus-block" style="height:100px;margin-top:32px;">
+    <div style="flex:1;background:#D6F25A;display:flex;align-items:center;padding:0 24px;font-size:13px;font-weight:700;color:black;">DELIVER</div>
+    <div style="flex:0.2;background:#111111;"></div>
+    <div style="flex:1;background:#1DC55E;display:flex;align-items:center;padding:0 24px;font-size:13px;font-weight:700;color:black;">n8n CHECKS</div>
+    <div style="flex:0.2;background:#111111;"></div>
+    <div style="flex:1;background:#3D3DF5;display:flex;align-items:center;padding:0 24px;font-size:13px;font-weight:700;color:white;">RELEASE ESCROW</div>
+  </div>
+  <div class="page-footer" style="padding-top:20px;">
+    <div class="pg-box">11</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page divider blue">
+  <div>
+    <div class="divider-num white-text">04</div>
+    <div class="divider-title white-text">Challenges &amp; Solutions</div>
+  </div>
+  <div class="page-footer" style="padding:0;">
+    <div class="pg-box white-box">12</div>
+    <div class="footer-title white-text">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page quotes">
+  <div class="data-headline" style="margin-bottom:28px;">Real engineering decisions made throughout the build</div>
+  <div class="quotes-grid">
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">Instagram's Graph API requires app review to access follower counts. Rather than blocking the feature, we used self-reported analytics and n8n's URL-based post verification as a pragmatic workaround that still provides meaningful accountability.</div>
+      <div class="quote-attr">
+        <span class="quote-name">Instagram API Constraint</span>
+        <span class="quote-role">Resolved with n8n URL verification</span>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">Real-time messaging via WebSockets would have been ideal, but adds significant infrastructure complexity. Periodic polling was implemented instead — a deliberate tradeoff that keeps the system stable within academic deployment constraints.</div>
+      <div class="quote-attr">
+        <span class="quote-name">Real-Time Messaging</span>
+        <span class="quote-role">Polling chosen over WebSocket complexity</span>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">MongoDB Atlas migration required reconfiguring IP allowlisting, connection string format, and network timeout handling. Helmet and rate-limiting middleware were added during this phase to harden the API against basic attack vectors.</div>
+      <div class="quote-attr">
+        <span class="quote-name">Cloud Migration &amp; Security</span>
+        <span class="quote-role">Atlas + Helmet + express-rate-limit</span>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">Docker was initially considered for consistent environment setup but removed — it added build complexity without meaningful benefit for a solo developer running all services locally with documented terminal commands.</div>
+      <div class="quote-attr">
+        <span class="quote-name">Docker Removal</span>
+        <span class="quote-role">Simplified to documented terminal workflow</span>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer" style="padding-top:28px;">
+    <div class="pg-box" style="border-color:black;">13</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page takeaways">
+  <div class="tk-headline">Key Takeaways</div>
+  <div class="tk-body">Four engineering and product lessons from building Influence Hub end-to-end as a solo developer over a full semester.</div>
+  <div class="tk-grid">
+    <div class="tk-card">
+      <div class="tk-card-title">Full-stack ownership teaches system thinking</div>
+      <div class="tk-card-body">Designing, building, testing, and deploying every layer — from Mongoose schema to React routing — forces you to understand how data flows across a real application. There is no abstraction to hide behind.</div>
+    </div>
+    <div class="tk-card">
+      <div class="tk-card-title">Pragmatic tradeoffs > theoretical perfection</div>
+      <div class="tk-card-body">Choosing polling over WebSockets, self-reported analytics over Graph API, and documented terminals over Docker — each decision prioritised shipping a working product over a theoretically ideal one.</div>
+    </div>
+    <div class="tk-card">
+      <div class="tk-card-title">Security must be baked in, not bolted on</div>
+      <div class="tk-card-body">Adding Helmet, rate limiting, JWT role verification, and .env secrets from the start prevents messy retrofitting. Security decisions made at architecture time are far cheaper than those made at deployment time.</div>
+    </div>
+    <div class="tk-card">
+      <div class="tk-card-title">Automation amplifies a small team's reach</div>
+      <div class="tk-card-body">One n8n workflow replaced an entire async background job system. For solo developers and small startups, automation tools like n8n close the gap between limited engineering headcount and production-grade reliability.</div>
+    </div>
+  </div>
+  <div class="page-footer" style="padding-top:24px;">
+    <div class="pg-box">14</div>
+    <div class="footer-title">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="black" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page cta-dark">
+  <div>
+    <div class="cta-headline">What comes next for Influence Hub</div>
+    <div class="cta-body">
+      <p>The platform is a working product — not just a prototype. Every stated feature has been implemented, tested, and documented. The architecture is designed to extend rather than rewrite.</p>
+      <p>The natural next steps: integrating the Instagram Graph API for verified follower counts, replacing simulated payments with a live Razorpay KYC gateway, upgrading messaging to Socket.io real-time delivery, and adding an AI-based influencer recommendation engine using collaboration history as training signal.</p>
+      <p>A rating and review system post-collaboration, multi-platform support beyond Instagram, and a React Native mobile application are the longer-horizon milestones that would take this from academic capstone to market-ready product.</p>
+    </div>
+    <a class="cta-link" href="https://github.com/ai-sharan/influence-hub">github.com/ai-sharan/influence-hub</a>
+  </div>
+  <div class="cta-footnote">
+    Influence Hub · Capstone Project 2025 · Sharan Shivannanavar (U02BF23S0094) · JSS SMI Dharwad, Dept. of Computer Science<br>
+    Payment is simulated. No real financial transactions occur. Analytics are self-reported pending Graph API integration.
+  </div>
+  <div class="page-footer dark" style="padding-top:32px;">
+    <div class="pg-box white-box">15</div>
+    <div class="footer-title white-text">Influence Hub — Project Report 2025</div>
+    <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="7" x2="28" y2="7" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+      <line x1="26" y1="8" x2="11" y2="32" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+    </svg>
+  </div>
+</div>
+
+</body>
+</html>
